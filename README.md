@@ -8,7 +8,7 @@ index="your index name here" (sourcetype="<windows_sourcetype_security>" OR sour
 | search host=local_system
 | table _time EventCode dest host ComputerName src_user Account_Name local_system user Security_ID member_id src_nt_domain dest_nt_domain
 ```
-
+<br />
 
 ## Username guessing brute force attack
 ```
