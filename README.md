@@ -3,13 +3,16 @@ This is a compilation of Splunk queries that I've collected and used over time. 
 
 Splunk queries
 
-**Zerologon**
+##Zerologon
+```
 index="your index name here" (sourcetype="<windows_sourcetype_security>" OR source="windows_source_security") EventCode="4742" OR EventCode="4624" AND (src_user="*anonymous*" OR member_id="*S-1-0*")
 | eval local_system=mvindex(upper(split(user,"$")),0)
 | search host=local_system
 | table _time EventCode dest host ComputerName src_user Account_Name local_system user Security_ID member_id src_nt_domain dest_nt_domain
+```
 
-**Username guessing brute force attack**
+##Username guessing brute force attack
+```
 index="your index name here" sourcetype=windows EventCode=4625 OR EventCode=4624 
  | bin _time span=5m as minute 
  | rex "Security ID:\s*\w*\s*\w*\s*Account Name:\s*(?<username>.*)\s*Account Domain:" 
@@ -19,11 +22,15 @@ index="your index name here" sourcetype=windows EventCode=4625 OR EventCode=4624
  | where Failed>=4
  | stats dc(username) as Total by minute 
  | where Total>5
+ ```
  
- **Successful file access (must have object access auditing enabled)**
- sourcetype=WinEventLog (Relative_Target_Name!="\\""" Relative_Target_Name!="*.ini") user!="*$" | bucket span=1d _time | stats count by Relative_Target_Name, user, _time, status | rename _time as Day | convert ctime(Day)
+##Successful file access (must have object access auditing enabled)
+```
+index="your index name here" sourcetype=WinEventLog (Relative_Target_Name!="\\""" Relative_Target_Name!="*.ini") user!="*$" | bucket span=1d _time | stats count by Relative_Target_Name, user, _time, status | rename _time as Day | convert ctime(Day)
+```
  
-**Successful Logons**
+##Successful Logons
+```
 index="your index name here" source="WinEventLog:security" EventCode=4624 Logon_Type IN (2,7,10,11) NOT user IN ("DWM-*", "UMFD-*")
 | eval Workstation_Name=lower(Workstation_Name)
 | eval host=lower(host)
@@ -33,6 +40,7 @@ index="your index name here" source="WinEventLog:security" EventCode=4624 Logon_
 | rename hammer as "12 hour blocks" host as "Target Host" Workstation_Name as "Source Host"
 | convert ctime("12 hour blocks")
 | sort - "12 hour blocks"
+```
 
 **Failed Logons**
 index="your index name here" source="WinEventLog:security" EventCode=4625
