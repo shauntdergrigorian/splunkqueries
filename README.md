@@ -4,7 +4,6 @@ This is a compilation of Splunk queries that I've collected and used over time. 
 Splunk queries
 
 **Zerologon**
-
 index="your index name here" (sourcetype="<windows_sourcetype_security>" OR source="windows_source_security") EventCode="4742" OR EventCode="4624" AND (src_user="*anonymous*" OR member_id="*S-1-0*")
 | eval local_system=mvindex(upper(split(user,"$")),0)
 | search host=local_system
