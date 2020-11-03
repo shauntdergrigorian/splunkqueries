@@ -9,6 +9,7 @@ index="your index name here" (sourcetype="<windows_sourcetype_security>" OR sour
 | table _time EventCode dest host ComputerName src_user Account_Name local_system user Security_ID member_id src_nt_domain dest_nt_domain
 ```
 
+
 ## Username guessing brute force attack
 ```
 index="your index name here" sourcetype=windows EventCode=4625 OR EventCode=4624 
@@ -21,7 +22,8 @@ index="your index name here" sourcetype=windows EventCode=4625 OR EventCode=4624
  | stats dc(username) as Total by minute 
  | where Total>5
  ```
- 
+
+
 ## Successful file access (must have object access auditing enabled)
 ```
 index="your index name here" sourcetype=WinEventLog (Relative_Target_Name!="\\""" Relative_Target_Name!="*.ini") user!="*$" | bucket span=1d _time | stats count by Relative_Target_Name, user, _time, status | rename _time as Day | convert ctime(Day)
