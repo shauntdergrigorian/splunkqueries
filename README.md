@@ -1,5 +1,5 @@
-# splunkqueries
-This is a compilation of Splunk queries that I've collected and used over time.
+# Splunk ES Queries
+This is a compilation of Splunk queries that I've collected and used over time. These can be used for threat hunting (e.g. Zerologon or lateral movement) or detecting suspicious behavior (e.g. a large number of failed logins in a short amount of time). I'll add to this list as I find more.
 
 Splunk queries
 
